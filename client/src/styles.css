@@ -30,7 +30,7 @@ html, body {
 #stage canvas { display: block; touch-action: none; }
 
 #ui { position: fixed; inset: 0; pointer-events: none; z-index: 2; }
-#ui > * { pointer-events: auto; }
+.landing, .modal { pointer-events: auto; }
 
 #video-sink {
   position: fixed;
