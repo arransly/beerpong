@@ -15,7 +15,7 @@ import { PaddleMesh } from './scene/Paddle.js';
 import { BallMesh } from './scene/Ball.js';
 import { FacePanel } from './scene/FacePanel.js';
 import { SpectatorStands } from './scene/SpectatorStands.js';
-import { SpectatorCamera, CAMERA_MODES } from './scene/SpectatorCamera.js';
+import { SpectatorCamera, CAMERA_MODES, isPortraitAspect } from './scene/SpectatorCamera.js';
 import { PaddleInput } from './input/PaddleInput.js';
 import { SnapshotBuffer } from './net/interpolation.js';
 import { createConnection, fetchLivekitToken } from './net/socket.js';
@@ -94,6 +94,7 @@ const memberName = (id) => (id && state?.members[id]?.name) || 'Someone';
 const slotName = (slot) => memberName(state?.slots[slot]);
 const mySlot = () => (state ? state.slots.indexOf(myId) : -1);
 const queuePos = () => (state ? state.queue.indexOf(myId) + 1 : 0);
+const isTouch = window.matchMedia('(pointer: coarse)').matches;
 const isPortraitPhone = () => window.innerHeight > window.innerWidth && window.innerWidth < 760;
 
 function roomUrl(code) {
@@ -385,7 +386,9 @@ function statusText(sample) {
       if (!state.canStart) return 'Need at least one player on each team. Invite mates or add a bot.';
       return isHost ? 'Ready when you are. Hit Start!' : 'Waiting for the host to start…';
     case PHASE.SERVE:
-      if (sample?.serverSlot === slot) return 'Your serve! Flick forward (or click / Space)';
+      if (sample?.serverSlot === slot) {
+        return isTouch ? 'Your serve! Flick your finger up the screen' : 'Your serve! Flick forward (or click / Space)';
+      }
       return `${slotName(sample?.serverSlot)} to serve`;
     case PHASE.PLAY:
       return slot >= 0 ? '' : 'Rally on!';
@@ -444,14 +447,17 @@ stage.onFrame((dt) => {
   }
 
   director.update(dt, ballVisible ? sample.ball : null);
-  for (const p of panels) if (p.group.visible) p.billboard(camera);
+  const portrait = isPortraitAspect(camera.aspect);
+  for (const p of panels) {
+    p.setLayout(portrait);
+    if (p.group.visible) p.billboard(camera);
+  }
   stands.billboard(camera);
 
   statusTimer -= dt;
   if (statusTimer <= 0 && session) {
     statusTimer = 0.2;
     hud.setStatus(statusText(sample));
-    hud.setRotateHint(slot >= 0 && isPortraitPhone());
   }
 });
 

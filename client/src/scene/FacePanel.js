@@ -76,7 +76,7 @@ export class FacePanel {
     this.color = TEAMS[s.team].color;
 
     this.group = new THREE.Group();
-    this.group.position.set(s.xSign * (HALF_W + 0.42), TABLE.height + 0.52, s.side * (HALF_L - 0.3));
+    this.setLayout(false);
 
     this.frame = new THREE.Mesh(
       roundedRectGeometry(PANEL_W + 0.03, PANEL_H + 0.03, 0.045),
@@ -101,6 +101,20 @@ export class FacePanel {
     this.surface = new FaceSurface(this.face, PANEL_W / PANEL_H);
     this.group.visible = false;
     this.labelText = '';
+  }
+
+  // Portrait screens are narrow, so panels tuck in tight to the corners and shrink.
+  setLayout(portrait) {
+    if (this.portrait === portrait) return;
+    this.portrait = portrait;
+    const s = SLOTS[this.slot];
+    if (portrait) {
+      this.group.position.set(s.xSign * (HALF_W + 0.16), TABLE.height + 0.34, s.side * (HALF_L - 0.1));
+      this.group.scale.setScalar(0.7);
+    } else {
+      this.group.position.set(s.xSign * (HALF_W + 0.42), TABLE.height + 0.52, s.side * (HALF_L - 0.3));
+      this.group.scale.setScalar(1);
+    }
   }
 
   setMember(member, video, { isMe = false, points = 0 } = {}) {

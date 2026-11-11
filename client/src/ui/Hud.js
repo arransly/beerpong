@@ -27,7 +27,6 @@ export class Hud {
         <div class="spectator-panel hidden" data-spec></div>
         <div class="banner hidden" data-banner></div>
         <div class="toast hidden" data-toast></div>
-        <div class="rotate-hint hidden" data-rotate>Turn your phone sideways to play</div>
       </div>
     `);
     root.appendChild(this.root);
@@ -40,7 +39,6 @@ export class Hud {
     this.toastEl = this.q('[data-toast]');
     this.selfFrame = this.q('[data-self]');
     this.cameraButton = this.q('[data-action="camera"]');
-    this.rotateHint = this.q('[data-rotate]');
 
     this.root.addEventListener('click', (e) => {
       const button = e.target.closest('[data-action]');
@@ -78,10 +76,6 @@ export class Hud {
     }
     if (!video) this.selfFrame.innerHTML = '';
     this.cameraButton.textContent = cameraOn ? 'Camera off' : 'Turn camera on';
-  }
-
-  setRotateHint(visible) {
-    this.rotateHint.classList.toggle('hidden', !visible);
   }
 
   render(state, view) {
