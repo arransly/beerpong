@@ -2,6 +2,7 @@ import {
   SLOTS,
   ROOM,
   PADDLE,
+  PHYSICS,
   SIPS_PER_GLASS,
   POINTS_PER_SIP,
   POINTS_PER_DOWN,
@@ -180,7 +181,7 @@ export class Match {
     const rally = this.rally;
     rally.time += dt;
     const cues = [];
-    stepBall(this.ball, dt, this.glasses, cues);
+    stepBall(this.ball, dt * PHYSICS.ballTimeScale, this.glasses, cues);
     for (const cue of cues) {
       this.cues.push(cue);
       if (this.phase !== PHASE.PLAY) return;

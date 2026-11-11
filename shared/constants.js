@@ -50,6 +50,9 @@ export const PHYSICS = {
   netRestitution: 0.15,
   glassRestitution: 0.35,
   curveDecay: 1.5,
+  // Slow-motion factor for the ball: shots keep the same arc and landing spot
+  // but take longer to arrive. 1 = real table tennis speed.
+  ballTimeScale: 0.65,
   tickRate: 60,
   substeps: 4,
   snapshotRate: 30,
